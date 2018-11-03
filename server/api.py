@@ -3,6 +3,7 @@ from SocketServer import ThreadingMixIn
 import json
 import os
 from manager_request_implementer import ManagerRequestImplementer
+from manager_request_implementer2 import ManagerRequestImplementer2
 
 class ManagerServer(ThreadingMixIn, HTTPServer):
     def __init__(self, address, handler):
@@ -13,15 +14,16 @@ class ManagerRequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         print(self.path)
-        mri = ManagerRequestImplementer()
         if self.path == "/cover_shifts":
+            mri = ManagerRequestImplementer()
             time = self.headers.getheader('time')
             message = mri.cover_shifts(time)
             print(message)
             self.send_response(200)
             self.end_headers()
             self.wfile.write(message)
-        elif self.path == "/switch_shifts":
+        elif self.path == "/swap_shifts":
+            mri = ManagerRequestImplementer2()
             old_time = self.headers.getheader('old_time')
             new_time = self.headers.getheader('new_time')
             from_person = self.headers.getheader('from_person')
