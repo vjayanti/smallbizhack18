@@ -2,8 +2,8 @@ from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from SocketServer import ThreadingMixIn
 import json
 import os
-from manager_request_implementer import ManagerRequestImplementer
 from switch_implementer import SwitchImplementer
+from cover_implementer import CoverImplementer
 
 class ManagerServer(ThreadingMixIn, HTTPServer):
     def __init__(self, address, handler):
@@ -15,9 +15,11 @@ class ManagerRequestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         print(self.path)
         if self.path == "/cover_shifts":
-            mri = ManagerRequestImplementer()
-            time = self.headers.getheader('time')
-            message = mri.cover_shifts(time)
+            mri = CoverImplementer()
+            start = self.headers.getheader('start')
+            end = self.headers.getheader('end')
+            group_id = self.headers.getheader('group')
+            message = mri.cover_shifts(start, end, group_id)
             print(message)
             self.send_response(200)
             self.end_headers()
