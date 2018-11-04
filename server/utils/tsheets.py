@@ -1,4 +1,5 @@
 import requests
+import json
 TSHEETS_URL = 'https://rest.tsheets.com/api/v1'
 TSHEETS_KEY = 'S.7__451415bf1afd3d22321e4eeaee72c3c37d398063'
 
@@ -8,8 +9,8 @@ def get_users():
         'Authorization': "Bearer "+TSHEETS_KEY,
     }
     response = requests.request("GET", TSHEETS_URL+'/users', headers=headers)
-    print(response.text)
-    return response.text
+    resDict = json.loads(response)[0]
+    return resDict['results']['users']
 
 def verify_schedules(requester_id, requested_id, time):
     tsheets = requests.get(TSHEETS_URL).content
@@ -30,8 +31,8 @@ def get_group(id):
         'Authorization': "Bearer "+TSHEETS_KEY,
     }
     response = requests.request("GET", TSHEETS_URL+'/groups?ids=' + str(id), headers=headers)
-    print(response.text)
-    return response['results']['groups']
+    resDict = dict(json.loads(response.text))
+    return resDict.get('results', {}).get('groups', {})
 
 def get_group_users(id):
     tsheets = requests.get(TSHEETS_URL).content
@@ -39,16 +40,16 @@ def get_group_users(id):
         'Authorization': "Bearer "+TSHEETS_KEY,
     }
     response = requests.request("GET", TSHEETS_URL+'/users?group_ids=' + str(id), headers=headers)
-    print(response.text)
-    return response['results']
+    resDict = dict(json.loads(response.text))
+    return resDict.get('results', {}).get('users', {})
 
-def get_group_timesheet(id):
+def get_group_timesheets(id):
     tsheets = requests.get(TSHEETS_URL).content
     headers = {
         'Authorization': "Bearer "+TSHEETS_KEY,
     }
     response = requests.request("GET", TSHEETS_URL+'/timesheets?group_ids=' + str(id), headers=headers)
-    print(response.text)
-    return response['results']
+    resDict = dict(json.loads(response.text))
+    return resDict.get('results', {}).get('timesheets', {})
 
 
