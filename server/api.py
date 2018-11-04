@@ -3,7 +3,7 @@ from SocketServer import ThreadingMixIn
 import json
 import os
 from manager_request_implementer import ManagerRequestImplementer
-from manager_request_implementer2 import ManagerRequestImplementer2
+from switch_implementer import SwitchImplementer
 
 class ManagerServer(ThreadingMixIn, HTTPServer):
     def __init__(self, address, handler):
@@ -23,7 +23,7 @@ class ManagerRequestHandler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(message)
         elif self.path == "/swap_shifts":
-            mri = ManagerRequestImplementer2()
+            mri = SwitchImplementer()
             old_time = self.headers.getheader('old_time')
             new_time = self.headers.getheader('new_time')
             from_person = self.headers.getheader('from_person')
@@ -41,5 +41,5 @@ Handler = ManagerRequestHandler
 
 httpd = ManagerServer(("", PORT), Handler)
 
-print "serving at port", PORT
+print("serving at port", PORT)
 httpd.serve_forever()

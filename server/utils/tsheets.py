@@ -11,3 +11,6 @@ def get_users():
     print(response.text)
     return response.text
 
+def verify_schedules():
+    pass
+
