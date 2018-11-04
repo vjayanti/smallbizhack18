@@ -31,6 +31,7 @@ class ManagerRequestHandler(BaseHTTPRequestHandler):
                 new_time = self.headers.getheader('new_time')
                 from_person = self.headers.getheader('from_person')
                 to_person = self.headers.getheader('to_person')
+                print(old_time, new_time, from_person, to_person)
                 message = mri.swap_shifts(old_time, new_time, from_person, to_person)
                 self.send_response(200)
                 self.end_headers()
@@ -42,6 +43,12 @@ class ManagerRequestHandler(BaseHTTPRequestHandler):
             self.send_response(400)
             self.end_headers()
             self.wfile.write(str(e))
+
+    def do_GET(self):
+        if self.path == '/':
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write('hello world')
 
 PORT = 10000
 

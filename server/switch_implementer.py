@@ -1,4 +1,5 @@
 from utils.tsheets import verify_schedules
+from utils import nexmo_utils
 
 class SwitchImplementer(object):
     def swap_shifts(self, old_time, new_time, from_person, to_person):
@@ -13,9 +14,10 @@ class SwitchImplementer(object):
 
     def send_swap_request(self, old_time, new_time, swap_from, swap_to):
         # get acknowledgement
-        # TODO: send api to swap_to
-        
-        pass
+        message = swap_from + ' is requesting a swap with ' + swap_to + ' from ' + old_time + ' to ' + new_time
+        print('sending message')
+        nexmo_utils.send('15105857152', message)
+        return 'sent message'
 
     def handle_response(self, swap_agreed=True):
         if swap_agreed:
@@ -48,3 +50,6 @@ class SwitchImplementer(object):
     def tsheets_swap_shifts(self):
         #Tsheets api
         pass
+
+    def fail_request(self):
+        return 'failed'
