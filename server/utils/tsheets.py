@@ -1,5 +1,9 @@
 import requests
 import json
+import urllib
+from datetime import datetime
+import pytz
+
 TSHEETS_URL = 'https://rest.tsheets.com/api/v1'
 TSHEETS_KEY = 'S.7__451415bf1afd3d22321e4eeaee72c3c37d398063'
 
@@ -43,13 +47,19 @@ def get_group_users(id):
     resDict = dict(json.loads(response.text))
     return resDict.get('results', {}).get('users', {})
 
-def get_group_timesheets(id):
+def get_group_schedule_events(start_ts, ids):
     tsheets = requests.get(TSHEETS_URL).content
     headers = {
         'Authorization': "Bearer "+TSHEETS_KEY,
     }
-    response = requests.request("GET", TSHEETS_URL+'/timesheets?group_ids=' + str(id), headers=headers)
+    tz = pytz.timezone('America/Los_Angeles')
+    start_date = datetime.fromtimestamp(start_ts, tz).isoformat()
+    calendar_id = 83765
+    params = urllib.urlencode({"start": start_date, "schedule_calendar_ids": calendar_id}) + "&user_ids={}".format(ids)+"&active=yes"
+    #params = urllib.quote_plus("start={}&schedule_calendar_ids={}&ids={}".format(start_date, calendar_id, ids))
+    print params
+    response = requests.request("GET", TSHEETS_URL+'/schedule_events?' + params, headers=headers)
+    #return response
     resDict = dict(json.loads(response.text))
-    return resDict.get('results', {}).get('timesheets', {})
-
+    return resDict.get('results', {}).get('schedule_events', {})
 
