@@ -5,17 +5,19 @@ class CoverImplementer(object):
 
     cover_message = "Need cover for slot {1} - {2}"
 
-    def validate_list_not_empty(self, l, code):
-        if l == None or len(l) == 0:
+    def validate_list_not_empty(self, d, code):
+        if d == None or len(d) == 0:
             raise Exception(code)
 
 
     def cover_shifts(self, shift_start, shift_end, group_name):
         # find the groups
-        group = next(iter(tsheets.get_group(group_name), None)
-        self.validate_list_not_empty(group, "no_group")
+        groups = tsheets.get_group(group_name)
+        self.validate_list_not_empty(groups, "no_group")
 
-        group_id = group['id']
+        group_ids = groups.keys()
+        group_ids.sort()
+        group_id = group_ids[0]
         # get all workers who can cover the shift
         group_users = tsheets.get_group_users(group_id)
         self.validate_list_not_empty(group_users, "no_group_users")

@@ -1,4 +1,4 @@
-from server.utils.tsheets import verify_schedules
+from utils.tsheets import verify_schedules
 
 class SwitchImplementer(object):
     def swap_shifts(self, old_time, new_time, from_person, to_person):
